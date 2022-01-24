@@ -42,7 +42,7 @@ function ssPreloader() {
 function ssPrettyPrint() {
     $('pre').addClass('prettyprint');
     $(document).ready(function () {
-        prettyPrint();
+        // prettyPrint();
     });
 };
 

@@ -4,8 +4,7 @@ import woodcraft_600 from '../assets/images/thumbs/masonry/woodcraft-600.jpg';
 import tulips_600 from '../assets/images/thumbs/masonry/tulips-600.jpg';
 import dew_600 from '../assets/images/thumbs/masonry/dew-600.jpg';
 
-export default class SMContent extends React.Component {
-    render() {
+const SMContent = (props) =>{
         return (
             <div className="s-content">
 
@@ -494,5 +493,6 @@ export default class SMContent extends React.Component {
 
             </div>
         )
-    }
 }
+
+export default SMContent;

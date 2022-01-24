@@ -1,8 +1,6 @@
 import React from 'react'
 
-
-export default class SMFooter extends React.Component {
-    render() {
+const SMFooter = (props) =>{
         return (
             <footer className="s-footer">
             <div className="row">
@@ -16,5 +14,7 @@ export default class SMFooter extends React.Component {
                 <a className="smoothscroll" title="Back to Top" href="#top"></a>
             </div>
         </footer>
-        )}
+        )
 }
+export default SMFooter;
+
