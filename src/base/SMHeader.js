@@ -73,6 +73,8 @@ const SMHeader = (props) => {
                             <li><Link to='/add'>新增</Link></li>
                             <li><Link to='/addAudio'>新增音频</Link></li>
                             <li><Link to='/addVideo'>新增视频</Link></li>
+                            <li><Link to='/addSaying'>新增名言</Link></li>
+                            <li><Link to='/addLink'>新增连接</Link></li>
                         </ul>
                     </li>
                 </ul>
