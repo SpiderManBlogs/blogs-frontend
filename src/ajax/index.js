@@ -1,9 +1,8 @@
 import axios from "axios";
-
-const baseUrl = "http://localhost:8080/blogs_web"
+import {BASEURL} from '../base/GlobalStatic';
 
 const saveaxios = axios.create({
-    baseURL: baseUrl,
+    baseURL: BASEURL,
     timeout: 5000,
     headers: {'Content-Type': 'application/json','Accept':'*/*','Accept-Encoding':'gzip, deflate, br','Connection':'keep-alive'}
 })

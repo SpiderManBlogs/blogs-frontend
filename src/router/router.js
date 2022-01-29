@@ -9,11 +9,20 @@ import {SMMainInit} from "../base/main";
 import '../assets/css/main.css'
 import '../assets/css/vendor.css'
 import '../assets/css/base.css'
+import $ from "jquery";
 
 const Routelist = (props) => {
 
     useEffect(function () {
         SMMainInit();
+        $("#loader").fadeOut("slow", function () {
+            // will fade out the whole DIV that covers the website.
+            $("#preloader").delay(300).fadeOut("slow");
+        });
+
+        // for hero content animations
+        $("html").removeClass('ss-preload');
+        $("html").addClass('ss-loaded');
     });
 
     return (
