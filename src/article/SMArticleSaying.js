@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import {query} from "../ajax";
+import {query_post as query} from "../ajax";
 
 
 const SMArticleSaying = (props) => {

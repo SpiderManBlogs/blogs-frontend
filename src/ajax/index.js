@@ -29,8 +29,24 @@ export function save(url,data,callback) {
  * @param data 参数
  * @param callback 成功后回调
  */
-export function query(url,data,callback){
+export function query_post(url,data,callback){
     saveaxios.post(url, data)
+        .then(function (response) {
+            callback && callback(response.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+/**
+ * 查询接口 get调用
+ * @param url 接口地址 /开头
+ * @param data 参数
+ * @param callback 成功后回调
+ */
+export function query_get(url,data,callback){
+    saveaxios({url:url,params:data})
         .then(function (response) {
             callback && callback(response.data);
         })

@@ -1,38 +1,54 @@
 import React, {useState} from 'react'
-import {Modal, Upload} from "antd";
+import {query_get as query} from '../ajax/index'
+import {message, Modal, Upload} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 import {BASEURL} from '../base/GlobalStatic';
 
 const SMUpload = (props) => {
 
-    const [data, setDate] = useState({previewVisible: false, previewImage: '', previewTitle: '', fileList: []});
+    const [fileList, setFileList] = useState([]);
+    const [previewVisible, setPreviewVisible] = useState(true);
+    const [previewImage, setPreviewImage] = useState('');
+    const [previewTitle, setPreviewTitle] = useState('');
 
-    const getBase64 = (file) => {
+    const getBase64 = (id) => {
         return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
+            query('/file/query',{fileCode:id},function (data) {
+                if (data.status === 1){
+                    resolve(data.data);
+                }else {
+                    reject(data.msg);
+                    message.error('查询失败:' + data.msg);
+                }
+            })
         });
     }
 
-    const handleCancel = () => setDate({ previewVisible: false });
+    const handleCancel = () => {
+        setPreviewVisible(false);
+    }
 
     const handlePreview = async file => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
+        if (!file.preview) {
+            file.preview = await getBase64(file.id);
         }
-
-        setDate({
-            previewImage: file.url || file.preview,
-            previewVisible: true,
-            previewTitle: file.name || file.url.substring(file.url.lastIndexOf('/') + 1),
-        });
+        setPreviewImage(file.preview);
+        setPreviewTitle(file.name);
+        setPreviewVisible(true);
     };
 
     const handleChange = ({file, fileList,event }) => {
-        setDate({ fileList });
-        props.form.setFieldsValue({ fileList });
+        setFileList(fileList);
+        if(fileList && fileList instanceof Array){
+            let ids = [];
+            for (let i in fileList){
+                if(fileList[i].response && fileList[i].response.status === 1){
+                    ids.push(fileList[i].response.data);
+                    file.id = fileList[i].response.data;
+                }
+            }
+            props.form.setFieldsValue({upload:ids});
+        }
     }
 
     const uploadButton = (
@@ -45,22 +61,22 @@ const SMUpload = (props) => {
     return (
         <>
             <Upload
-                name="logo"
+                name="file"
                 action={BASEURL + "/file/insert"}
                 listType="picture-card"
-                fileList={data.fileList}
+                fileList={fileList}
                 onPreview={handlePreview}
                 onChange={handleChange}
             >
-                {data.fileList.length >= 8 ? null : uploadButton}
+                {fileList.length >= 8 ? null : uploadButton}
             </Upload>
             <Modal
-                visible={data.previewVisible}
-                title={data.previewTitle}
+                visible={previewVisible}
+                title={previewTitle}
                 footer={null}
                 onCancel={handleCancel}
             >
-                <img alt="example" style={{ width: '100%' }} src={data.previewImage} />
+                <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
         </>
     );

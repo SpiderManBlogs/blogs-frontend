@@ -1,20 +1,10 @@
 import React from 'react'
-import {Button, Form} from "antd";
+import {Button, Form, message} from "antd";
 
 import './index.less'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import {save} from '../ajax/index'
 import SMUpload from "./SMUpload";
-
-const normFile = (e) => {
-    console.log('Upload event:', e);
-
-    if (Array.isArray(e)) {
-        return e;
-    }
-
-    return e && e.fileList;
-};
 
 const SMAdd = (props) => {
 
@@ -29,6 +19,7 @@ const SMAdd = (props) => {
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
+        message.error('请填写必填项！');
     };
 
     return (<div className="s-content-from">
@@ -42,17 +33,11 @@ const SMAdd = (props) => {
             autoComplete="off"
             form={smform}
         >
-
             <Form.Item
                 name="upload"
                 label="Upload"
                 valuePropName="fileList"
-                getValueFromEvent={normFile}
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
+                rules={[{required: true,}]}
             >
                 <SMUpload fileSize={1} form={smform}/>
             </Form.Item>
@@ -62,6 +47,7 @@ const SMAdd = (props) => {
                     提交
                 </Button>
             </Form.Item>
+
         </Form></div>);
 }
 

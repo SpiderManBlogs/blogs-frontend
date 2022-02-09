@@ -15,6 +15,7 @@ module.exports = webpackMerge.merge(baseWebpackConfig,{
             inject: true, // true：默认值，script标签位于html文件的 body 底部
         })
     ],
+    devtool:'source-map',
     // 开发环境本地启动的服务配置
     devServer: {
         historyApiFallback: true, // 当找不到路径的时候，默认加载index.html文件

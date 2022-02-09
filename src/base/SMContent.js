@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {query} from '../ajax/index'
+import {query_post as query} from '../ajax/index'
 import SMArticle from "../article/SMArticle";
 import {useNavigate} from 'react-router-dom'
 

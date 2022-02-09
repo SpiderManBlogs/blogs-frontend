@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import {query} from "../ajax";
+import {query_post as query} from "../ajax";
 import woodcraft_600 from "../assets/images/thumbs/masonry/woodcraft-600.jpg";
 
 
