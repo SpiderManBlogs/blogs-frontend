@@ -65,7 +65,7 @@ const SMHeader = (props) => {
                         </ul>
                     </li>
                     <li><a href="" title="">Styles</a></li>
-                    <li><Link to="/home">首页</Link></li>
+                    <li><Link to="/defdoclist">档案</Link></li>
                     <li><Link to='/home'>Contact</Link></li>
                     <li className='has-children'>
                         <a href="#" title="">新增</a>

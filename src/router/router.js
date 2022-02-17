@@ -1,7 +1,7 @@
 import React, {useEffect} from "react"
 import {Route, BrowserRouter as Router, Routes} from "react-router-dom"
 import SMContent from '../base/SMContent'
-import {SMAdd,SMAddLink,SMAddSaying} from '../admin/index'
+import {SMAdd,SMAddLink,SMAddSaying,SMDefdoclist} from '../admin/index'
 import SMHeader from "../base/SMHeader"
 import SMFooter from "../base/SMFooter";
 import {SMMainInit} from "../base/main";
@@ -35,6 +35,8 @@ const Routelist = (props) => {
                     <Route path="/add" element={<SMAdd/>}/>
                     <Route path="/addLink" element={<SMAddLink/>}/>
                     <Route path="/addSaying" element={<SMAddSaying/>}/>
+
+                    <Route path="/defdoclist" element={<SMDefdoclist/>}/>
                 </Routes>
                 <SMFooter/>
             </div>
