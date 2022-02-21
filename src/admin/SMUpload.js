@@ -7,7 +7,7 @@ import {BASEURL} from '../base/GlobalStatic';
 const SMUpload = (props) => {
 
     const [fileList, setFileList] = useState([]);
-    const [previewVisible, setPreviewVisible] = useState(true);
+    const [previewVisible, setPreviewVisible] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
 

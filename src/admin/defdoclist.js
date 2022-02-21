@@ -28,10 +28,10 @@ const SMDefdoclist = (props) => {
         },
         {title: '操作', key: 'operation',width:'10%',align:'right',
             render: (text, record, index) => <div>
-                {record.enablement && record.enablement === 1 ? <Button type="text" icon={<CloseCircleTwoTone/>} onClick={enablementlist.bind(this,record,0)}/>
+                {record.enablement ? <Button type="text" icon={<CloseCircleTwoTone/>} onClick={enablementlist.bind(this,record,0)}/>
                     : <Button type="text" icon={<CheckCircleTwoTone/>} onClick={enablementlist.bind(this,record,1)}/>}
-                    <Button type="text" icon={<EditTwoTone/>}/>
-                    <Button type="text" icon={<DeleteTwoTone twoToneColor={'#eb2f96'} onClick={deletelist.bind(this,record)}/>}/>
+                    <Button type="text" icon={<EditTwoTone/>} onClick={editlist.bind(this,record)}/>
+                {record.enablement ? null : <Button type="text" icon={<DeleteTwoTone twoToneColor={'#eb2f96'} onClick={deletelist.bind(this,record)}/>}/>}
         </div>
         },
     ];
@@ -57,30 +57,46 @@ const SMDefdoclist = (props) => {
             {
                 title: '操作', key: 'operation', width: '10%', align: 'right',
                 render: (text, record, index) => <div>
-                    {record.enablement && record.enablement === 1 ? <Button type="text" icon={<CloseCircleTwoTone/>}
+                    {record.enablement ? <Button type="text" icon={<CloseCircleTwoTone/>}
                                                                             onClick={enablement.bind(this, record, 0)}/>
                         : <Button type="text" icon={<CheckCircleTwoTone/>}
                                   onClick={enablement.bind(this, record, 1)}/>}
-                    <Button type="text" icon={<EditTwoTone/>}/>
-                    <Button type="text" icon={<DeleteTwoTone twoToneColor={'#eb2f96'}
-                                                             onClick={delete2.bind(this, record)}/>}/>
+                    <Button type="text" icon={<EditTwoTone/>} onClick={edit.bind(this,record)}/>
+                    {record.enablement ? null : <Button type="text" icon={<DeleteTwoTone twoToneColor={'#eb2f96'}
+                                                                                         onClick={delete2.bind(this, record)}/>}/>}
                 </div>
             },
         ]
         return <div>
             <Button type="primary" onClick={add.bind(this,record)}>添加值</Button>
-            <Table columns={columns} dataSource={detailedata[record.defdoclistid]} pagination={false}/>
+            <Table
+                columns={columns}
+                rowKey={'defdocid'}
+                dataSource={detailedata[record.defdoclistid]}
+                pagination={false}/>
         </div>;
     };
 
+    //档案列表list数据
     const [data, setData] = useState([]);
+    //档案详情数据
     const [detailedata, setDetailedata] = useState({});
+    //是否展示档案新增弹窗
     const [visiblelist, setVisiblelist] = useState(false);
+    //档案新增弹窗的保存按钮是否加载中
     const [confirmLoadinglist, setConfirmLoadinglist] = useState(false);
+    //档案列表表单
     const [listform] = Form.useForm();
+    //是否展示档案详情新增弹窗
     const [visible, setVisible] = useState(false);
+    //档案详情新增弹窗的保存按钮是否加载中
     const [confirmLoading, setConfirmLoading] = useState(false);
+    //档案详情表单
     const [form] = Form.useForm();
+    //档案列表list展开行记录
+    let [expandedRowKeys,setExpandedRowKeys] = useState([]);
+    //档案编码禁用
+    let [codedisabled,setCodedisabled] = useState(false);
 
     useEffect(function () {
         querData();
@@ -98,14 +114,23 @@ const SMDefdoclist = (props) => {
     }
 
     //展开行时查询数据
-    const expandQueryData = (record, index, indent, expanded) => {
-        query(QUERY,{id:index.defdoclistid},(data) => {
-            if(data && data.status === 1){
-                setDetailedata({[index.defdoclistid]:data.data});
-            }else {
-                message.error('查询失败:' + data.msg);
-            }
-        })
+    const expandQueryData = (expanded, record) => {
+        if (expanded){
+            query(QUERY,{id:record.defdoclistid},(data) => {
+                if(data && data.status === 1){
+                    let newdetaildata = JSON.parse(JSON.stringify(detailedata));
+                    newdetaildata[record.defdoclistid] = data.data;
+                    setDetailedata(newdetaildata);
+                }else {
+                    message.error('查询失败:' + data.msg);
+                }
+            })
+        }
+    }
+
+    //展开的行变化时触发
+    const onExpandedRowsChange = (expandedRows) => {
+        setExpandedRowKeys(expandedRows);
     }
 
     //列表删除
@@ -129,12 +154,18 @@ const SMDefdoclist = (props) => {
             }
         });
     }
+    //列表编辑
+    const editlist = (record) => {
+        listform.setFieldsValue(record);
+        setCodedisabled(true);
+        setVisiblelist(true);
+    }
 
     //删除
     const delete2 = (record) => {
         save(DELETE,record,(data) => {
             if(data && data.status === 1){
-                expandQueryData(null,record);
+                expandQueryData(true,record);
             }else {
                 message.error('删除失败:' + data.msg);
             }
@@ -145,21 +176,28 @@ const SMDefdoclist = (props) => {
         record.enablement = enablement;
         save(SAVE,record,(data) => {
             if(data && data.status === 1){
-                expandQueryData(null,record);
+                expandQueryData(true,record);
             }else {
                 message.error('删除失败:' + data.msg);
             }
         });
     }
-
+    //编辑
+    const edit = (record) => {
+        form.setFieldsValue(record);
+        setCodedisabled(true);
+        setVisible(true);
+    }
 
     //档案列表新增按钮
     const addlist = (event) => {
+        setCodedisabled(false);
         setVisiblelist(true);
     }
     //档案新增值
     const add = (record,event) => {
         form.setFieldsValue({defdoclistid:record.defdoclistid});
+        setCodedisabled(false);
         setVisible(true);
     }
 
@@ -182,6 +220,7 @@ const SMDefdoclist = (props) => {
 
     //档案新增 取消按钮
     const handleCancel = () => {
+        listform.resetFields();
         setVisiblelist(false);
     };
 
@@ -191,7 +230,7 @@ const SMDefdoclist = (props) => {
         let addData = form.getFieldsValue(true);
         save(SAVE,addData,(data) => {
             if(data && data.status === 1){
-                expandQueryData(null,data.data);
+                expandQueryData(true,data.data);
                 form.resetFields();
                 setVisible(false);
             }else{
@@ -204,6 +243,7 @@ const SMDefdoclist = (props) => {
 
     //值新增 取消按钮
     const handleCancel2 = () => {
+        form.resetFields();
         setVisible(false);
     };
 
@@ -213,7 +253,8 @@ const SMDefdoclist = (props) => {
             <Table
                 className="components-table-demo-nested"
                 columns={columns}
-                expandable={{ expandedRowRender }}
+                rowKey={'defdoclistid'}
+                expandable={{ expandedRowRender,onExpandedRowsChange,expandedRowKeys }}
                 onExpand={expandQueryData}
                 dataSource={data}
             />
@@ -245,7 +286,7 @@ const SMDefdoclist = (props) => {
                         name="defdoclistcode"
                         rules={[{ required: true, message: '请输入编码!' }]}
                     >
-                        <Input />
+                        <Input disabled={codedisabled}/>
                     </Form.Item>
 
                     <Form.Item
@@ -293,7 +334,7 @@ const SMDefdoclist = (props) => {
                         name="defdoccode"
                         rules={[{ required: true, message: '请输入编码!' }]}
                     >
-                        <Input />
+                        <Input disabled={codedisabled}/>
                     </Form.Item>
                     <Form.Item
                         label="名称"
