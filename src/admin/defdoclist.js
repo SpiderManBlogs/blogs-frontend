@@ -1,6 +1,6 @@
 import {Button, Form, Input, message, Modal, Table} from 'antd';
 import {CheckCircleTwoTone, CloseCircleTwoTone, DeleteTwoTone, EditTwoTone} from '@ant-design/icons';
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useReducer} from "react";
 import {query_post as query, save} from "../ajax";
 
 const LIST_QUERY = '/defdoc/queryList';
@@ -10,7 +10,43 @@ const QUERY = '/defdoc/query';
 const DELETE = '/defdoc/deleteDefdoc';
 const SAVE = '/defdoc/saveDefdoc';
 
+const initState = {
+    //档案列表list控制值
+    data:[],            //档案列表list数据
+    expandedRowKeys:[], //档案列表list展开行记录
+    visiblelist:false,  //是否展示档案新增弹窗
+    confirmLoadinglist:false,//档案新增弹窗的保存按钮是否加载中
+
+    //档案详情控制值
+    detailedata:{},     //档案详情数据
+    visible:false,      //是否展示档案详情新增弹窗
+    confirmLoading:false,//档案详情新增弹窗的保存按钮是否加载中
+
+    codedisabled:false, //档案编码禁用
+}
+
+function loginReducer(state, action) {
+    switch (action.type) {
+        case 'refreshData':return {...state,data:action.data};
+        case 'refreshDetailedata':
+            state.detailedata[action.defdoclistid]=action.data;
+            return {...state};
+        case 'listModal':return {...state,visiblelist:action.visiblelist};
+        case 'loadingListModal':return {...state,confirmLoadinglist:action.confirmLoadinglist};
+        case 'modal':return {...state,visible:action.visible};
+        case 'loadingModal':return {...state,confirmLoading:action.confirmLoading};
+        case 'expandedRows':return {...state,expandedRowKeys:action.expandedRowKeys};
+        case 'codedisabled':return {...state,codedisabled:action.codedisabled};
+        default:
+            return state;
+    }
+}
+
 const SMDefdoclist = (props) => {
+
+    const [state, dispatch] = useReducer(loginReducer, initState);
+
+    const {data,expandedRowKeys,visiblelist,confirmLoadinglist,detailedata,visible,confirmLoading,codedisabled} = state;
 
     const columns = [
         // { title: 'defdoclistid', dataIndex: 'defdoclistid', key: 'defdoclistid'
@@ -77,26 +113,9 @@ const SMDefdoclist = (props) => {
         </div>;
     };
 
-    //档案列表list数据
-    const [data, setData] = useState([]);
-    //档案详情数据
-    const [detailedata, setDetailedata] = useState({});
-    //是否展示档案新增弹窗
-    const [visiblelist, setVisiblelist] = useState(false);
-    //档案新增弹窗的保存按钮是否加载中
-    const [confirmLoadinglist, setConfirmLoadinglist] = useState(false);
     //档案列表表单
     const [listform] = Form.useForm();
-    //是否展示档案详情新增弹窗
-    const [visible, setVisible] = useState(false);
-    //档案详情新增弹窗的保存按钮是否加载中
-    const [confirmLoading, setConfirmLoading] = useState(false);
-    //档案详情表单
     const [form] = Form.useForm();
-    //档案列表list展开行记录
-    let [expandedRowKeys,setExpandedRowKeys] = useState([]);
-    //档案编码禁用
-    let [codedisabled,setCodedisabled] = useState(false);
 
     useEffect(function () {
         querData();
@@ -106,7 +125,7 @@ const SMDefdoclist = (props) => {
     const querData = () => {
         query(LIST_QUERY, {}, (data) => {
             if(data && data.status === 1){
-                setData(data.data);
+                dispatch({type:'refreshData',data:data.data});
             }else {
                 message.error('查询失败:' + data.msg);
             }
@@ -118,19 +137,12 @@ const SMDefdoclist = (props) => {
         if (expanded){
             query(QUERY,{id:record.defdoclistid},(data) => {
                 if(data && data.status === 1){
-                    let newdetaildata = JSON.parse(JSON.stringify(detailedata));
-                    newdetaildata[record.defdoclistid] = data.data;
-                    setDetailedata(newdetaildata);
+                    dispatch({type:'refreshDetailedata',defdoclistid:record.defdoclistid,data:data.data});
                 }else {
                     message.error('查询失败:' + data.msg);
                 }
             })
         }
-    }
-
-    //展开的行变化时触发
-    const onExpandedRowsChange = (expandedRows) => {
-        setExpandedRowKeys(expandedRows);
     }
 
     //列表删除
@@ -157,8 +169,8 @@ const SMDefdoclist = (props) => {
     //列表编辑
     const editlist = (record) => {
         listform.setFieldsValue(record);
-        setCodedisabled(true);
-        setVisiblelist(true);
+        dispatch({type:'codedisabled',codedisabled:true});
+        dispatch({type:'listModal',visiblelist:true});
     }
 
     //删除
@@ -185,35 +197,35 @@ const SMDefdoclist = (props) => {
     //编辑
     const edit = (record) => {
         form.setFieldsValue(record);
-        setCodedisabled(true);
-        setVisible(true);
+        dispatch({type:'codedisabled',codedisabled:true});
+        dispatch({type:'modal',visible:true});
     }
 
     //档案列表新增按钮
     const addlist = (event) => {
-        setCodedisabled(false);
-        setVisiblelist(true);
+        dispatch({type:'codedisabled',codedisabled:false});
+        dispatch({type:'listModal',visiblelist:true});
     }
     //档案新增值
     const add = (record,event) => {
         form.setFieldsValue({defdoclistid:record.defdoclistid});
-        setCodedisabled(false);
-        setVisible(true);
+        dispatch({type:'codedisabled',codedisabled:false});
+        dispatch({type:'modal',visible:true});
     }
 
     //档案新增 保存按钮
     const handleOk = () => {
-        setConfirmLoadinglist(true);
+        dispatch({type:'loadingListModal',confirmLoadinglist:true});
         let addData = listform.getFieldsValue(true);
         save(LIST_SAVE,addData,(data) => {
             if(data && data.status === 1){
                 querData();
                 listform.resetFields();
-                setVisiblelist(false);
+                dispatch({type:'listModal',visiblelist:false});
             }else{
                 message.error('新增失败:' + data.msg);
             }
-            setConfirmLoadinglist(false);
+            dispatch({type:'loadingListModal',confirmLoadinglist:false});
         });
 
     };
@@ -221,22 +233,22 @@ const SMDefdoclist = (props) => {
     //档案新增 取消按钮
     const handleCancel = () => {
         listform.resetFields();
-        setVisiblelist(false);
+        dispatch({type:'listModal',visiblelist:false});
     };
 
     //值新增 保存按钮
     const handleOk2 = () => {
-        setConfirmLoading(true);
+        dispatch({type:'loadingModal',confirmLoading:true});
         let addData = form.getFieldsValue(true);
         save(SAVE,addData,(data) => {
             if(data && data.status === 1){
                 expandQueryData(true,data.data);
                 form.resetFields();
-                setVisible(false);
+                dispatch({type:'modal',visible:false});
             }else{
                 message.error('新增失败:' + data.msg);
             }
-            setConfirmLoading(false);
+            dispatch({type:'loadingModal',confirmLoading:false});
         });
 
     };
@@ -244,7 +256,7 @@ const SMDefdoclist = (props) => {
     //值新增 取消按钮
     const handleCancel2 = () => {
         form.resetFields();
-        setVisible(false);
+        dispatch({type:'modal',visible:false});
     };
 
     return (
@@ -254,7 +266,11 @@ const SMDefdoclist = (props) => {
                 className="components-table-demo-nested"
                 columns={columns}
                 rowKey={'defdoclistid'}
-                expandable={{ expandedRowRender,onExpandedRowsChange,expandedRowKeys }}
+                expandable={{ expandedRowRender,
+                    onExpandedRowsChange:(expandedRows) => {
+                        dispatch({type:'expandedRows',expandedRows:expandedRows});
+                    },
+                    expandedRowKeys }}
                 onExpand={expandQueryData}
                 dataSource={data}
             />
