@@ -47,7 +47,7 @@ const SMUpload = (props) => {
                     file.id = fileList[i].response.data;
                 }
             }
-            props.form.setFieldsValue({upload:ids});
+            props.onChange(ids);
         }
     }
 

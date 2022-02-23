@@ -18,7 +18,7 @@ const SMAddSaying = (props) => {
     };
 
     return (
-        <div className="s-content-from">
+        <div className="s-content">
             <Form
                 name="basic"
                 labelCol={{ span: 8 }}

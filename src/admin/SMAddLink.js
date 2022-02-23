@@ -18,7 +18,7 @@ const SMAddLink = (props) => {
         console.log('Failed:', errorInfo);
     };
 
-    return(<div className="s-content-from">
+    return(<div className="s-content">
         <Form
             name="basic"
             labelCol={{ span: 8 }}
