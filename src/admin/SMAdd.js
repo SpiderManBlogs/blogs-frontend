@@ -4,8 +4,7 @@ import {Button, Form, Input, message, Select,Row, Col, Divider} from "antd";
 import './index.less'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import {query_post as query, save} from '../ajax/index'
-import SMUpload from "./SMUpload";
-import EditableTagGroup from "./SMInputTags"
+import {SMUpload,EditableTagGroup,EditableTable} from "./baseModule/index";
 const { Option } = Select;
 const QUERY = '/defdoc/query';
 
@@ -65,7 +64,7 @@ const SMAdd = (props) => {
             autoComplete="off"
             form={smform}
         >
-            <Row justify="space-between">
+            <Row justify="space-around">
                 <Col span={12}>
                     <Form.Item
                         name="title"
@@ -84,7 +83,7 @@ const SMAdd = (props) => {
                         <Input/>
                     </Form.Item>
                 </Col>
-                <Col span={5}>
+                <Col span={4}>
                     <Form.Item
                         name="classify"
                         label="分类"
@@ -107,7 +106,7 @@ const SMAdd = (props) => {
                         </Select>
                     </Form.Item>
                 </Col>
-                <Col span={5}>
+                <Col span={12}>
 
                     <Form.Item
                         name="tag"
@@ -117,7 +116,7 @@ const SMAdd = (props) => {
                         <EditableTagGroup/>
                     </Form.Item>
                 </Col>
-                <Col span={5}>
+                <Col span={8}>
                     <Form.Item
                         name="upload"
                         label="Upload"
@@ -125,6 +124,12 @@ const SMAdd = (props) => {
                         rules={[{required: true,}]}
                     >
                         <SMUpload fileSize={1}/>
+                    </Form.Item>
+                </Col>
+
+                <Col span={24} >
+                    <Form.Item>
+                        <EditableTable />
                     </Form.Item>
                 </Col>
 

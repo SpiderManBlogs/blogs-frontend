@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
-import {query_get as query} from '../ajax/index'
+import {query_get as query} from '../../ajax/index'
 import {message, Modal, Upload} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
-import {BASEURL} from '../base/GlobalStatic';
+import {BASEURL} from '../../base/GlobalStatic';
 
 const SMUpload = (props) => {
 
