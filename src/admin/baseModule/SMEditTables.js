@@ -1,5 +1,6 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
-import {Table, Input, Button, Popconfirm, Form} from 'antd';
+import {Table, Input, Button, Popconfirm, Form, Select} from 'antd';
+const { Option ,OptGroup} = Select;
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { MenuOutlined } from '@ant-design/icons';
 import { arrayMoveImmutable } from 'array-move';
@@ -38,7 +39,7 @@ const EditableCell = ({title, editable, children, dataIndex, record, handleSave,
     let childNode = children;
 
     if (editable) {
-        childNode = editing ? (
+        childNode = editing ? dataIndex === 'style' ? (
             <Form.Item
                 style={{
                     margin: 0,
@@ -51,8 +52,52 @@ const EditableCell = ({title, editable, children, dataIndex, record, handleSave,
                     },
                 ]}
             >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+                <Select ref={inputRef} onPressEnter={save} onBlur={save}
+                        placeholder="样式"
+                        optionFilterProp="children">
+                    <OptGroup label="段落">
+                        <Option key='p' value='p'>基本</Option>
+                        <Option key='p_lead-drop-cap' value='p_lead-drop-cap'>段落大写</Option>
+                        <Option key='blockquote' value='blockquote'>引用</Option>
+                        <Option key='img' value='img'>图片</Option>
+                    </OptGroup>
+                    <OptGroup label="内容">
+                        <Option key='p' value='p'>基本</Option>
+                    </OptGroup>
+                    <OptGroup label="标题">
+                        <Option key='H1' value='H1'>H1</Option>
+                        <Option key='H2' value='H2'>H2</Option>
+                        <Option key='H3' value='H3'>H3</Option>
+                        <Option key='H4' value='H4'>H4</Option>
+                        <Option key='H5' value='H5'>H5</Option>
+                        <Option key='H6' value='H6'>H6</Option>
+                    </OptGroup>
+                    <Option key='P' value='P'>P</Option>
+                    <Option key='P' value='P'>P</Option>
+                    <Option key='P' value='P'>P</Option>
+                    <Option key='P' value='P'>P</Option>
+                    <Option key='P' value='P'>P</Option>
+                    <Option key='P' value='P'>P</Option>
+                    <Option key='P' value='P'>P</Option>
+                    <Option key='P' value='P'>P</Option>
+                    <Option key='P' value='P'>P</Option>
+                    <Option key='P' value='P'>P</Option>
+                </Select>
             </Form.Item>
+        ):(<Form.Item
+                    style={{
+                        margin: 0,
+                    }}
+                    name={dataIndex}
+                    rules={[
+                        {
+                            required: true,
+                            message: `${title} is required.`,
+                        },
+                    ]}
+                >
+                    <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+                </Form.Item>
         ) : (
             <div
                 className="editable-cell-value-wrap"
@@ -90,19 +135,16 @@ class EditableTable extends React.Component {
                 render: () => <DragHandle />,
             },
             {
-                title: 'Name',
-                dataIndex: 'name',
+                title: '样式',
+                dataIndex: 'style',
                 className: 'drag-visible',
+                width: 100,
                 editable: true,
             },
             {
-                title: 'Age',
-                dataIndex: 'age',
-                editable: true,
-            },
-            {
-                title: 'Address',
-                dataIndex: 'address',
+                title: '内容',
+                dataIndex: 'content',
+                width: 1000,
                 editable: true,
             },
             {
