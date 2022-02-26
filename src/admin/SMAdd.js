@@ -55,15 +55,12 @@ const SMAdd = (props) => {
     }
 
     const onFinish = (values) => {
-        values.tags = tags.state;
-        console.log('Success:', values);
-        // save('/blogs/saveLink',values,(response) => {
-        //     debugger
-        // });
+        save('/blogs/save',values,(data) => {
+            debugger
+        });
     };
 
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
         message.error('请填写必填项！');
     };
 
@@ -105,8 +102,6 @@ const SMAdd = (props) => {
                     showSearch
                     placeholder="选择分类"
                     optionFilterProp="children"
-                    // onChange={onChange}
-                    // onSearch={onSearch}
                     filterOption={(input, option) =>
                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
@@ -119,6 +114,27 @@ const SMAdd = (props) => {
             </Form.Item>
 
             <Form.Item
+                name="type"
+                label="类型"
+                rules={[{required: true,}]}
+            >
+                <Select
+                    showSearch
+                    placeholder="选择类型"
+                    optionFilterProp="children"
+                    filterOption={(input, option) =>
+                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                >
+                      <Option key='image' value='image'>image</Option>;
+                      <Option key='images' value='images'>images</Option>;
+                      <Option key='audio' value='audio'>audio</Option>;
+                      <Option key='video' value='video'>video</Option>;
+                    }
+                </Select>
+            </Form.Item>
+
+            <Form.Item
                 name="tag"
                 label="标签"
                 rules={[{required: true,}]}
@@ -126,8 +142,8 @@ const SMAdd = (props) => {
                 <EditableTagGroup/>
             </Form.Item>
             <Form.Item
-                name="upload"
-                label="Upload"
+                name="images"
+                label="封面"
                 valuePropName="fileList"
                 rules={[{required: true,}]}
             >
