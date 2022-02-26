@@ -258,3 +258,7 @@ export function SMMainInit() {
     ssAlertBoxes();
     ssBackToTop();
 }
+
+export function SMMainInitPre() {
+    ssPrettyPrint();
+}

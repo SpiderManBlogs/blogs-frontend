@@ -1,11 +1,12 @@
 import React, {useEffect, useReducer} from 'react'
-import {Button, Form, Input, message, Select,Row, Col, Divider} from "antd";
+import {Button, Divider, Form, Input, message, Select} from "antd";
 import E from "wangeditor"
 
 import './index.less'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import {query_post as query, save} from '../ajax/index'
-import {SMUpload,EditableTagGroup,EditableTable} from "./baseModule/index";
+import {EditableTagGroup, SMUpload} from "./baseModule/index";
+
 const { Option } = Select;
 const QUERY = '/defdoc/query';
 

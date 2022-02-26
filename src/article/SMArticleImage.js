@@ -1,4 +1,5 @@
-import React, {useState,useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
+import { useNavigate } from 'react-router-dom';
 import {query_post as query} from "../ajax";
 import {message, Tag} from "antd";
 
@@ -35,12 +36,16 @@ const SMArticleImage = (props) => {
             }
         })
     }
+    const navigate = useNavigate();
+    const linktoDetail = (id) => {
+        navigate('/detail',{state:{id:id}});
+    }
 
     return (
         data ? <article className="masonry__brick entry format-standard animate-this">
 
             <div className="entry__thumb">
-                <a href="single-standard.html" className="entry__thumb-link">
+                <a onClick={linktoDetail.bind(this,data.id)} className="entry__thumb-link">
                     {backImage ? backImage.map((image) => {
                         return <img src={image} alt=""/>
                     }):null}
@@ -49,7 +54,7 @@ const SMArticleImage = (props) => {
 
             <div className="entry__text">
                 <div className="entry__header">
-                    <h2 className="entry__title"><a href="single-standard.html">{data.title}</a></h2>
+                    <h2 className="entry__title"><a onClick={linktoDetail.bind(this,data.id)}>{data.title}</a></h2>
                     <div className="entry__meta">
                         <span className="entry__meta-date" >{data.createTime}</span>
 

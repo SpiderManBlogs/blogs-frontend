@@ -13,9 +13,9 @@ const SMUpload = (props) => {
 
     const getBase64 = (id) => {
         return new Promise((resolve, reject) => {
-            query('/file/query',{fileCode:id},function (data) {
+            query('/file/query',{fileCode:[id]},function (data) {
                 if (data.status === 1){
-                    resolve(data.data);
+                    resolve(data.data[0]);
                 }else {
                     reject(data.msg);
                     message.error('查询失败:' + data.msg);

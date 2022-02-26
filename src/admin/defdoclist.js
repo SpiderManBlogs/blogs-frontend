@@ -53,7 +53,7 @@ const SMDefdoclist = (props) => {
         // },
         { title: '档案名称', dataIndex: 'defdoclistname', key: 'defdoclistname',width:'25%' },
         { title: '档案编码', dataIndex: 'defdoclistcode', key: 'defdoclistcode',width:'25%' },
-        { title: '启用状态', dataIndex: 'enablement', key: 'enablement',width:'5%',
+        { title: '启用状态', dataIndex: 'enablement', key: 'enablement',width:'10%',
             render:(text, record, index) => {
                 if (text === 1){
                     return <CheckCircleTwoTone />;
@@ -273,6 +273,7 @@ const SMDefdoclist = (props) => {
                     expandedRowKeys }}
                 onExpand={expandQueryData}
                 dataSource={data}
+                pagination={false}
             />
             <Modal
                 title="档案新增"
@@ -285,8 +286,8 @@ const SMDefdoclist = (props) => {
             >
                 <Form
                     name="basic"
-                    labelCol={{ span: 8 }}
-                    wrapperCol={{ span: 16 }}
+                    labelCol={{ span: 0 }}
+                    wrapperCol={{ span: 24 }}
                     autoComplete="off"
                     form={listform}
                 >
@@ -326,8 +327,8 @@ const SMDefdoclist = (props) => {
             >
                 <Form
                     name="basic"
-                    labelCol={{ span: 8 }}
-                    wrapperCol={{ span: 16 }}
+                    labelCol={{ span: 0 }}
+                    wrapperCol={{ span: 24 }}
                     autoComplete="off"
                     form={form}
                 >

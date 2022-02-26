@@ -1,11 +1,13 @@
 import React from 'react'
-import {Button, Form, Input} from "antd";
+import {Button, Divider, Form, Input} from "antd";
 
 import './index.less'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import {save} from '../ajax/index'
 
 const SMAddLink = (props) => {
+
+    const Dividertitle = "新增";
 
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -19,10 +21,11 @@ const SMAddLink = (props) => {
     };
 
     return(<div className="s-content">
+        <Divider orientation="left">{Dividertitle}</Divider>
         <Form
             name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
+            labelCol={{span: 5}}
+            wrapperCol={{span: 19}}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
