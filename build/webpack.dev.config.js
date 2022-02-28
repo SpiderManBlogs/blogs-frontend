@@ -2,6 +2,7 @@ const webpackMerge = require("webpack-merge");
 const baseWebpackConfig = require("./webpack.base.config")
 const utils = require("./utils")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const AddAssetHtmlPlugin = require("add-asset-html-webpack-plugin")
 const path = require("path")
 
 module.exports = webpackMerge.merge(baseWebpackConfig,{
@@ -13,7 +14,13 @@ module.exports = webpackMerge.merge(baseWebpackConfig,{
             filename: utils.resolve('./../dist/index.html'), // html模板的生成路径
             template: 'index.html',//html模板
             inject: true, // true：默认值，script标签位于html文件的 body 底部
-        })
+        }),
+        new AddAssetHtmlPlugin([
+            {filepath: path.resolve(__dirname, '../src/assets/jquery-3.2.1.min.js')},
+            {filepath: path.resolve(__dirname, '../src/assets/plugins.js')},
+            {filepath: path.resolve(__dirname, '../src/assets/modernizr.js')},
+            {filepath: path.resolve(__dirname, '../src/assets/main.js')}
+        ])
     ],
     devtool:'source-map',
     // 开发环境本地启动的服务配置

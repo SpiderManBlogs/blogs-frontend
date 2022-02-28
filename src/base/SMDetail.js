@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { useLocation } from 'react-router-dom';
 import {query_post as query} from "../ajax";
 import {message, Tag} from "antd";
+import $ from "jquery";
 
 const tag_color = ["magenta","red","volcano","orange","gold","lime","green","cyan","blue","geekblue","purple"];
 
@@ -20,6 +21,10 @@ const SMDetail = (props) => {
             if (data.status === 1){
                 setDate(data.data);
                 getBase64(data.data.images);
+                $('pre').addClass('prettyprint');
+                $(document).ready(function () {
+                    prettyPrint();
+                });
             }else {
                 message.error('查询失败:' + data.msg);
             }

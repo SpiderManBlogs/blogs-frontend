@@ -2,6 +2,8 @@ const webpackMerge = require("webpack-merge");
 const baseWebpackConfig = require("./webpack.base.config")
 const utils = require("./utils")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const AddAssetHtmlPlugin = require("add-asset-html-webpack-plugin")
+const path = require("path")
 
 module.exports = webpackMerge.merge(baseWebpackConfig,{
     // 指定构建环境
@@ -19,6 +21,12 @@ module.exports = webpackMerge.merge(baseWebpackConfig,{
                 collapseWhitespace: true,           //压缩空格
                 removeAttributeQuotes: true         //去除属性引用
             }
-        })
+        }),
+        new AddAssetHtmlPlugin([
+            {filepath: path.resolve(__dirname, '../src/assets/jquery-3.2.1.min.js')},
+            {filepath: path.resolve(__dirname, '../src/assets/plugins.js')},
+            {filepath: path.resolve(__dirname, '../src/assets/modernizr.js')},
+            {filepath: path.resolve(__dirname, '../src/assets/main.js')}
+        ])
     ],
 })
