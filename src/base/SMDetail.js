@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import { useLocation } from 'react-router-dom';
 import {query_post as query} from "../ajax";
-import {message, Tag} from "antd";
-import $ from "jquery";
+import {message, Tag,Carousel,Image} from "antd";
+import {SMMainInitPrettyPrint} from "./main"
+import 'antd/dist/antd.css';
 
 const tag_color = ["magenta","red","volcano","orange","gold","lime","green","cyan","blue","geekblue","purple"];
 
@@ -12,20 +13,18 @@ const SMDetail = (props) => {
     const [backImage,setBackImage] = useState(null);
     const location = useLocation();
     const [blogid,setBlogid] = useState(location.state && location.state.id);
+    const type = location.state && location.state.type;
 
     useEffect(function () {
         let queryData = {
             id: blogid,
-            type:'image'
+            type:type
         }
         query('/blogs/queryCard',queryData,(data) => {
             if (data.status === 1){
                 setDate(data.data);
                 getBase64(data.data.images);
-                $('pre').addClass('prettyprint');
-                $(document).ready(function () {
-                    prettyPrint();
-                });
+                SMMainInitPrettyPrint();
             }else {
                 message.error('查询失败:' + data.msg);
             }
@@ -52,11 +51,21 @@ const SMDetail = (props) => {
 
                 <div className="media-wrap entry__media">
                     <div className="entry__post-thumb">
-                        {backImage ? backImage.map((image) => {
-                            return <img src={image} alt=""/>
-                        }):null}
+                        {backImage ? type === 'image'
+                            ? <Image src={backImage[0]} preview={false} alt=""/>
+                            : <Carousel
+                                autoplay={true}
+                                dotPosition="bottom"
+                            >
+                                {backImage.map((image) => {
+                                    return <Image src={image} preview={false} width="auto" height="auto"/>
+                                })}
+                            </Carousel> : null
+                        }
                     </div>
                 </div>
+
+
 
                 <div className="content__page-header entry__header">
                     <h1 className="display-1 entry__title">{data.title}</h1>

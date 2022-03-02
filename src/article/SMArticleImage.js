@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import {query_post as query} from "../ajax";
-import {message, Tag} from "antd";
+import {message, Tag,Carousel,Image } from "antd";
 
 const tag_color = ["magenta","red","volcano","orange","gold","lime","green","cyan","blue","geekblue","purple"];
 
@@ -38,19 +38,26 @@ const SMArticleImage = (props) => {
     }
     const navigate = useNavigate();
     const linktoDetail = (id) => {
-        navigate('/detail',{state:{id:id}});
+        navigate('/detail',{state:{id:id,type:props.type}});
     }
 
     return (
         data ? <article className="masonry__brick entry format-standard animate-this">
 
-            <div className="entry__thumb">
-                <a onClick={linktoDetail.bind(this,data.id)} className="entry__thumb-link">
-                    {backImage ? backImage.map((image) => {
-                        return <img src={image} alt=""/>
-                    }):null}
+            {backImage ? props.type === 'image' ? <div className="entry__thumb">
+                <a onClick={linktoDetail.bind(this, data.id)} className="entry__thumb-link">
+                    <Image src={backImage[0]}/>
                 </a>
-            </div>
+            </div> : <Carousel
+                autoplay={true}
+                dotPosition="bottom"
+                dots={true}
+            >
+                {backImage.map((image) => {
+                    return <Image src={image} preview={false}/>
+                })}
+            </Carousel> : null
+            }
 
             <div className="entry__text">
                 <div className="entry__header">

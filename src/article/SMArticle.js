@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {SMArticleSaying, SMArticleLink, SMArticleImage, SMArticleImages, SMArticleAudio, SMArticleVideo} from './index'
+import {SMArticleSaying, SMArticleLink, SMArticleImage, SMArticleAudio, SMArticleVideo} from './index'
 
 const SMArticle = (props) => {
 
@@ -21,11 +21,11 @@ const SMArticle = (props) => {
                                 )
                             case 'image':
                                 return (
-                                    <SMArticleImage blogid={blogid}/>
+                                    <SMArticleImage blogid={blogid} type="image"/>
                                 )
                             case 'images':
                                 return (
-                                    <SMArticleImages blogid={blogid}/>
+                                    <SMArticleImage blogid={blogid} type="images"/>
                                 )
                             case 'audio':
                                 return (

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {query_post as query} from '../ajax/index'
 import SMArticle from "../article/SMArticle";
 import {useNavigate} from 'react-router-dom'
+import 'antd/dist/antd.css';
 
 const SMContent = (props) => {
 

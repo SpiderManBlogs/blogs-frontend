@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {query_get as query} from '../../ajax/index'
+import {query_post as query} from '../../ajax/index'
 import {message, Modal, Upload} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 import {BASEURL} from '../../base/GlobalStatic';
@@ -13,7 +13,7 @@ const SMUpload = (props) => {
 
     const getBase64 = (id) => {
         return new Promise((resolve, reject) => {
-            query('/file/query',{fileCode:[id]},function (data) {
+            query('/file/query',{ids:[id]},function (data) {
                 if (data.status === 1){
                     resolve(data.data[0]);
                 }else {
@@ -68,7 +68,7 @@ const SMUpload = (props) => {
                 onPreview={handlePreview}
                 onChange={handleChange}
             >
-                {fileList.length >= 8 ? null : uploadButton}
+                {fileList.length >= props.fileSize ? null : uploadButton}
             </Upload>
             <Modal
                 visible={previewVisible}

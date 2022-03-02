@@ -5,8 +5,8 @@ const SMHeader = (props) => {
 
     const navigate = useNavigate();
 
-    function addOnClick() {
-        navigate('/add', {state: {}});
+    function addOnClick(type) {
+        navigate('/add', {state: {type:type}});
     }
 
 
@@ -70,9 +70,10 @@ const SMHeader = (props) => {
                     <li className='has-children'>
                         <a href="#" title="">新增</a>
                         <ul className="sub-menu">
-                            <li><Link to='/add'>新增</Link></li>
-                            <li><Link to='/addAudio'>新增音频</Link></li>
-                            <li><Link to='/addVideo'>新增视频</Link></li>
+                            <li><a onClick={addOnClick.bind(this,"image")}>新增图片</a></li>
+                            <li><a onClick={addOnClick.bind(this,"images")}>新增多图片</a></li>
+                            <li><a onClick={addOnClick.bind(this,"audio")}>新增音频</a></li>
+                            <li><a onClick={addOnClick.bind(this,"video")}>新增视频</a></li>
                             <li><Link to='/addSaying'>新增名言</Link></li>
                             <li><Link to='/addLink'>新增连接</Link></li>
                         </ul>

@@ -1,17 +1,20 @@
 import React, {useEffect, useState} from 'react'
 import {Button, Divider, Form, Input, message, Select} from "antd";
+import { useLocation } from 'react-router-dom';
 import E from "wangeditor"
-
 import './index.less'
+
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import {save} from '../ajax/index'
 import {EditableTagGroup, SMUpload,SMClassify} from "./baseModule/index";
-
 const SMAdd = (props) => {
 
     const [Dividertitle,setDividertitle] = useState("新增");
 
     const [smform] = Form.useForm();
+
+    const location = useLocation();
+    const type = location.state && location.state.type
 
     useEffect(function () {
         const editor = new E("#editContent")
@@ -46,8 +49,8 @@ const SMAdd = (props) => {
         <Divider orientation="left">{Dividertitle}</Divider>
         <Form
             name="basic"
-            labelCol={{span: 5}}
-            wrapperCol={{span: 19}}
+            labelCol={{span: 1}}
+            wrapperCol={{span: 23}}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
@@ -82,6 +85,7 @@ const SMAdd = (props) => {
                 name="type"
                 label="类型"
                 rules={[{required: true,}]}
+                initialValue={type}
             >
                 <Select
                     showSearch
@@ -90,6 +94,8 @@ const SMAdd = (props) => {
                     filterOption={(input, option) =>
                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                     }
+                    defaultValue={type}
+                    disabled
                 >
                       <Option key='image' value='image'>image</Option>;
                       <Option key='images' value='images'>images</Option>;
@@ -112,7 +118,7 @@ const SMAdd = (props) => {
                 valuePropName="fileList"
                 rules={[{required: true,}]}
             >
-                <SMUpload fileSize={1}/>
+                <SMUpload fileSize={type === 'images' ? 3 : 1}/>
             </Form.Item>
             <Form.Item
                 name="content"

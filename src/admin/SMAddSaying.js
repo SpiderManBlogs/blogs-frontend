@@ -24,8 +24,8 @@ const SMAddSaying = (props) => {
             <Divider orientation="left">{Dividertitle}</Divider>
             <Form
                 name="basic"
-                labelCol={{span: 5}}
-                wrapperCol={{span: 19}}
+                labelCol={{span: 1}}
+                wrapperCol={{span: 23}}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
