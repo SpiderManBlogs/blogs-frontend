@@ -5,7 +5,7 @@ import SMDetail from '../base/SMDetail'
 import {SMAdd,SMAddLink,SMAddSaying,SMDefdoclist} from '../admin/index'
 import SMHeader from "../base/SMHeader"
 import SMFooter from "../base/SMFooter";
-import {SMMainInit} from "../base/main";
+import {SMMainInitMenu} from "../base/main";
 
 import '../assets/css/main.css'
 import '../assets/css/vendor.css'
@@ -14,17 +14,9 @@ import $ from "jquery";
 
 const Routelist = (props) => {
 
-    // useEffect(function () {
-    //     SMMainInit();
-    //     $("#loader").fadeOut("slow", function () {
-    //         // will fade out the whole DIV that covers the website.
-    //         $("#preloader").delay(300).fadeOut("slow");
-    //     });
-    //
-    //     // for hero content animations
-    //     $("html").removeClass('ss-preload');
-    //     $("html").addClass('ss-loaded');
-    // });
+    useEffect(function () {
+        SMMainInitMenu();
+    });
 
     return (
         <Router>

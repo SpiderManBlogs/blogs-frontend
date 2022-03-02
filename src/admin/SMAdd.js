@@ -1,43 +1,19 @@
-import React, {useEffect, useReducer} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Button, Divider, Form, Input, message, Select} from "antd";
 import E from "wangeditor"
 
 import './index.less'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
-import {query_post as query, save} from '../ajax/index'
-import {EditableTagGroup, SMUpload} from "./baseModule/index";
-
-const { Option } = Select;
-const QUERY = '/defdoc/query';
-
-const initState ={
-    data:[],
-    Dividertitle:'新增',
-};
-
-function loginReducer(state, action){
-    switch (action.type) {
-        case 'loadDefdoc':return {...state,data:action.data};
-        default:
-            return state;
-    }
-}
+import {save} from '../ajax/index'
+import {EditableTagGroup, SMUpload,SMClassify} from "./baseModule/index";
 
 const SMAdd = (props) => {
 
-    const [state, dispatch] = useReducer(loginReducer, initState);
-    const {data,Dividertitle,templateStr} = state;
+    const [Dividertitle,setDividertitle] = useState("新增");
 
     const [smform] = Form.useForm();
 
     useEffect(function () {
-        query(QUERY, {id:'620de57e875b272d49d8793b'}, (data) => {
-            if(data && data.status === 1){
-                dispatch({type:'loadDefdoc',data:data.data});
-            }else {
-                message.error('查询参照失败:' + data.msg);
-            }
-        });
         const editor = new E("#editContent")
         editor.config.onchange = (newHtml) => {
             editoronChange(newHtml);
@@ -99,19 +75,7 @@ const SMAdd = (props) => {
                 label="分类"
                 rules={[{required: true,}]}
             >
-                <Select
-                    showSearch
-                    placeholder="选择分类"
-                    optionFilterProp="children"
-                    filterOption={(input, option) =>
-                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
-                >
-                    {data.length && data.map((item, index) => {
-                        return <Option key={item.defdocid} value={item.defdocid}>{item.defdocname}</Option>;
-                    })
-                    }
-                </Select>
+                <SMClassify/>
             </Form.Item>
 
             <Form.Item

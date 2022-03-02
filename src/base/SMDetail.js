@@ -11,10 +11,11 @@ const SMDetail = (props) => {
     const [data,setDate] = useState(null);
     const [backImage,setBackImage] = useState(null);
     const location = useLocation();
+    const [blogid,setBlogid] = useState(location.state && location.state.id);
 
     useEffect(function () {
         let queryData = {
-            id: location.state && location.state.id,
+            id: blogid,
             type:'image'
         }
         query('/blogs/queryCard',queryData,(data) => {
@@ -29,7 +30,7 @@ const SMDetail = (props) => {
                 message.error('查询失败:' + data.msg);
             }
         });
-    },[]);
+    },[blogid]);
 
     const getBase64 = (id) => {
         query('/file/query',{ids:id},function (data) {
@@ -40,6 +41,10 @@ const SMDetail = (props) => {
             }
         })
     }
+
+    const nextOrPrevOnClick = (id) =>  {
+        setBlogid(id);
+    };
 
     return <div className="s-content content">
         <main className="row content__page">
@@ -77,16 +82,16 @@ const SMDetail = (props) => {
                 <div className="entry__pagenav">
                     <div className="entry__nav">
                         <div className="entry__prev">
-                            <a href="#0" rel="prev">
+                            {data.prev ? <a onClick={nextOrPrevOnClick.bind(this,data.prev.id)} rel="prev">
                                 <span>上一篇</span>
-                                Tips on Minimalist Design
-                            </a>
+                                {data.prev.title}
+                            </a> : <a>前面没有了</a>}
                         </div>
                         <div className="entry__next">
-                            <a href="#0" rel="next">
+                            {data.next ? <a onClick={nextOrPrevOnClick.bind(this,data.next.id)} rel="next">
                                 <span>下一篇</span>
-                                {data.next}
-                            </a>
+                                {data.next.title}
+                            </a> : <a>最后一篇了</a>}
                         </div>
                     </div>
                 </div>

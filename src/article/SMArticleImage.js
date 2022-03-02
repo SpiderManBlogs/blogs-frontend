@@ -59,7 +59,7 @@ const SMArticleImage = (props) => {
                         <span className="entry__meta-date" >{data.createTime}</span>
 
                         <span className="entry__meta-cat" >
-                                        <a href="category.html">{data.classify && data.classify.name}</a>
+                                        <a href="category.html">{data.classify && data.classify.defdocname}</a>
                                     </span>
                         <span className="entry__meta-date" >{data.tag && data.tag.map((tag, index) => {
                             return <Tag color={tag_color[index % 11]}>{tag}</Tag>
