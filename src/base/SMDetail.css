@@ -1,0 +1,13 @@
+.progressAudio {
+    bottom: 0px;
+    right: 100px !important;
+    width: auto;
+    height:auto;
+    position: fixed;
+}
+
+.progressAudio Button{
+    /*position: relative;*/
+    /*left: -50%;*/
+    /*top: -30px;*/
+}

@@ -1,16 +1,23 @@
 import React, {useState, useEffect} from 'react'
 import { useLocation } from 'react-router-dom';
 import {query_post as query} from "../ajax";
-import {message, Tag,Carousel,Image} from "antd";
+import {message, Tag,Carousel,Image,Progress,Button} from "antd";
+import { PlayCircleOutlined,PauseCircleOutlined } from '@ant-design/icons';
 import {SMMainInitPrettyPrint} from "./main"
 import 'antd/dist/antd.css';
+import {BASEURL} from './GlobalStatic';
+import './SMDetail.css'
 
 const tag_color = ["magenta","red","volcano","orange","gold","lime","green","cyan","blue","geekblue","purple"];
+
+var audioE = document.createElement("audio");
 
 const SMDetail = (props) => {
 
     const [data,setDate] = useState(null);
     const [backImage,setBackImage] = useState(null);
+    const [percent,setPercent] = useState(0);
+    const [paused,setPaused] = useState(false);
     const location = useLocation();
     const [blogid,setBlogid] = useState(location.state && location.state.id);
     const type = location.state && location.state.type;
@@ -25,6 +32,16 @@ const SMDetail = (props) => {
                 setDate(data.data);
                 getBase64(data.data.images);
                 SMMainInitPrettyPrint();
+                audioE.src = BASEURL+"/file/queryFile?id=" + data.data.multimedia;
+                audioE.load();
+                //设置立即播放
+                audioE.autoplay = true;
+                //设置结束后重播
+                audioE.loop = true;
+                //监听播放
+                audioE.addEventListener('timeupdate', (event) => {
+                    setPercent(audioE.currentTime.toFixed(2));
+                });
             }else {
                 message.error('查询失败:' + data.msg);
             }
@@ -45,6 +62,11 @@ const SMDetail = (props) => {
         setBlogid(id);
     };
 
+    const audioOnClick = () => {
+        audioE.paused ? audioE.play() : audioE.pause();
+        setPaused(audioE.paused);
+    }
+
     return <div className="s-content content">
         <main className="row content__page">
             {data ? <article className="column large-full entry format-standard">
@@ -64,8 +86,10 @@ const SMDetail = (props) => {
                         }
                     </div>
                 </div>
-
-
+                <div className="progressAudio">
+                    <Progress  type="circle" percent={percent} />
+                    <Button shape="circle" icon={paused ? <PlayCircleOutlined /> : <PauseCircleOutlined />} onClick={audioOnClick}/>
+                </div>
 
                 <div className="content__page-header entry__header">
                     <h1 className="display-1 entry__title">{data.title}</h1>

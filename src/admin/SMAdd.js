@@ -6,7 +6,7 @@ import './index.less'
 
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import {save} from '../ajax/index'
-import {EditableTagGroup, SMUpload,SMClassify} from "./baseModule/index";
+import {EditableTagGroup, SMUpload,SMClassify,SMUploadFile} from "./baseModule/index";
 const SMAdd = (props) => {
 
     const [Dividertitle,setDividertitle] = useState("新增");
@@ -120,6 +120,15 @@ const SMAdd = (props) => {
             >
                 <SMUpload fileSize={type === 'images' ? 3 : 1}/>
             </Form.Item>
+            {
+                type === 'audio' || type === 'video' ? <Form.Item
+                    name="multimedia"
+                    label="多媒体"
+                    rules={[{required: true,}]}
+                >
+                    <SMUploadFile />
+                </Form.Item> : null
+            }
             <Form.Item
                 name="content"
                 label="内容"
