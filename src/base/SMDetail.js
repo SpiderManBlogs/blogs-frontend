@@ -1,16 +1,17 @@
 import React, {useState, useEffect} from 'react'
 import { useLocation } from 'react-router-dom';
-import {query_post as query} from "../ajax";
+import {query_post as query,query_get as get} from "../ajax";
 import {message, Tag,Carousel,Image,Progress,Button} from "antd";
 import { PlayCircleOutlined,PauseCircleOutlined } from '@ant-design/icons';
 import {SMMainInitPrettyPrint} from "./main"
 import 'antd/dist/antd.css';
-import {BASEURL} from './GlobalStatic';
+import {BASEURL,tag_color} from './GlobalStatic';
 import './SMDetail.css'
 
-const tag_color = ["magenta","red","volcano","orange","gold","lime","green","cyan","blue","geekblue","purple"];
-
 var audioE = document.createElement("audio");
+let videoE = null;
+import DPlayer from 'dplayer';
+import Hls from 'hls.js'
 
 const SMDetail = (props) => {
 
@@ -32,20 +33,50 @@ const SMDetail = (props) => {
                 setDate(data.data);
                 getBase64(data.data.images);
                 SMMainInitPrettyPrint();
-                audioE.src = BASEURL+"/file/queryFile?id=" + data.data.multimedia;
-                audioE.load();
-                //设置立即播放
-                audioE.autoplay = true;
-                //设置结束后重播
-                audioE.loop = true;
-                //监听播放
-                audioE.addEventListener('timeupdate', (event) => {
-                    setPercent(audioE.currentTime.toFixed(2));
-                });
+                if (data.data.multimedia){
+                    //存在多媒体时
+                    if (type === 'audio'){
+                        audioE.src = BASEURL+"/file/queryAudio?id=" + data.data.multimedia;
+                        audioE.load();
+                        //设置立即播放
+                        audioE.autoplay = true;
+                        //设置结束后重播
+                        audioE.loop = true;
+                        //监听播放
+                        audioE.addEventListener('timeupdate', (event) => {
+                            setPercent(audioE.currentTime.toFixed(2));
+                        });
+                    }else if (type === 'video'){
+                        videoE = new DPlayer({
+                            container: document.getElementById('dplayer'),
+                            lang: 'zh-cn',
+                            video: {
+                                url: BASEURL + "/file/queryM3U8/" + data.data.multimedia + "/video_name.m3u8",
+                                pic: BASEURL + '/file/queryImage/' + data.data.images,
+                                type: 'customHls',
+                                customType: {
+                                    customHls: function (video, player) {
+                                        const hls = new Hls();
+                                        hls.loadSource(video.src);
+                                        hls.attachMedia(video);
+                                    },
+                                },
+                            },
+                        });
+                        // video.play() // 播放
+                        // video.on('ended', function() {
+                        //     // 监听函数
+                        // })
+                    }
+                }
             }else {
                 message.error('查询失败:' + data.msg);
             }
         });
+        return () => {
+            audioE.pause();
+            videoE.destroy()
+        }
     },[blogid]);
 
     const getBase64 = (id) => {
@@ -73,23 +104,26 @@ const SMDetail = (props) => {
 
                 <div className="media-wrap entry__media">
                     <div className="entry__post-thumb">
-                        {backImage ? type === 'image'
-                            ? <Image src={backImage[0]} preview={false} alt=""/>
-                            : <Carousel
-                                autoplay={true}
-                                dotPosition="bottom"
-                            >
-                                {backImage.map((image) => {
-                                    return <Image src={image} preview={false} width="auto" height="auto"/>
-                                })}
-                            </Carousel> : null
+                        {
+                            type !== 'video' ? (backImage ? type === 'image'
+                                    ? <Image src={backImage[0]} preview={false} alt=""/>
+                                    : <Carousel
+                                        autoplay={true}
+                                        dotPosition="bottom"
+                                    >
+                                        {backImage.map((image) => {
+                                            return <Image src={image} preview={false} width="auto" height="auto"/>
+                                        })}
+                                    </Carousel> : null
+                            ) : <div id="dplayer"/>
                         }
+
                     </div>
                 </div>
-                <div className="progressAudio">
+                {type === 'audio' ? <div className="progressAudio">
                     <Progress  type="circle" percent={percent} />
                     <Button shape="circle" icon={paused ? <PlayCircleOutlined /> : <PauseCircleOutlined />} onClick={audioOnClick}/>
-                </div>
+                </div>:null}
 
                 <div className="content__page-header entry__header">
                     <h1 className="display-1 entry__title">{data.title}</h1>

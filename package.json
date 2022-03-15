@@ -43,6 +43,8 @@
     "array-move": "^4.0.0",
     "axios": "^0.25.0",
     "code-prettify": "^0.1.0",
+    "dplayer": "^1.26.0",
+    "hls.js": "^1.1.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-router": "6.0.2",

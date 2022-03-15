@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {query_post as query} from "../ajax";
 import {Image, message, Tag} from "antd";
 
-const tag_color = ["magenta","red","volcano","orange","gold","lime","green","cyan","blue","geekblue","purple"];
+import {tag_color} from '../base/GlobalStatic';
 
 const SMArticleAudio = (props) => {
 

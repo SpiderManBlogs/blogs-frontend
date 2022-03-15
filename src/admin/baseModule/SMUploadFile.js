@@ -21,7 +21,12 @@ const SMUploadFile = (props) => {
     }
 
     const beforeUpload = (file) => {
-        const isPNG = file.type === 'audio/mpeg';
+        let isPNG = props.type === 'audio' ? file.type.startsWith('audio') : file.type.startsWith('video');
+        if (!isPNG){
+            isPNG = props.type === 'video' && (file.name.endsWith('flv')
+                || file.name.endsWith('mp4') || file.name.endsWith('mov') || file.name.endsWith('m4v')
+                || file.name.endsWith('avi') || file.name.endsWith('mkv') || file.name.endsWith('wmv'));
+        }
         if (!isPNG) {
             message.error(`${file.name} is not a png file`);
         }

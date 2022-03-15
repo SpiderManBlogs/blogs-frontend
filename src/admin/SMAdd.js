@@ -126,7 +126,7 @@ const SMAdd = (props) => {
                     label="多媒体"
                     rules={[{required: true,}]}
                 >
-                    <SMUploadFile />
+                    <SMUploadFile type={type}/>
                 </Form.Item> : null
             }
             <Form.Item

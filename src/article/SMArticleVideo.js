@@ -1,58 +1,83 @@
-import React, {useState,useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
+import {useNavigate} from 'react-router-dom';
 import {query_post as query} from "../ajax";
+import {Image, message, Tag} from "antd";
 
+import {tag_color} from '../base/GlobalStatic';
 
-const SMArticleVideo = (props) => {
+const SMArticleAudio = (props) => {
 
-    const [data,setDate] = useState({article:{}});
+    const [data,setDate] = useState(null);
+
+    const [backImage,setBackImage] = useState(null);
 
     useEffect(function () {
 
         let queryData = {
             id: props.blogid,
-            type:'link'
+            type:'image'
         }
         query('/blogs/queryCard',queryData,(data) => {
-            setDate(data.data);
+            if (data.status === 1){
+                setDate(data.data);
+                getBase64(data.data.images);
+            }else {
+                message.error('查询失败:' + data.msg);
+            }
         });
-    },[props.article]);
+    },[]);
+
+    const getBase64 = (id) => {
+        query('/file/query',{ids:id},function (data) {
+            if (data.status === 1){
+                setBackImage(data.data);
+            }else {
+                message.error('查询封面失败:' + data.msg);
+            }
+        })
+    }
+    const navigate = useNavigate();
+    const linktoDetail = (id) => {
+        navigate('/detail',{state:{id:id,type:'video'}});
+    }
 
     return (
-        <article className="masonry__brick entry format-video animate-this">
+        data ? <article className="masonry__brick entry format-video animate-this">
 
-            <div className="entry__thumb video-image">
-                <a href="" data-lity className="entry__thumb-link">
-                    <img src="images/thumbs/masonry/cookies-600.jpg"
-                         srcSet="images/thumbs/masonry/cookies-600.jpg 1x, images/thumbs/masonry/cookies-1200.jpg 2x"
-                         alt=""/>
-                </a>
-            </div>
+            {
+                backImage ? <div className="entry__thumb">
+                    <a onClick={linktoDetail.bind(this, data.id)} className="entry__thumb-link">
+                        <Image src={backImage[0]} preview={false}/>
+                    </a>
+                </div>:null
+            }
 
             <div className="entry__text">
                 <div className="entry__header">
-                    <h2 className="entry__title"><a href="single-video.html">No Sugar Oatmeal
-                        Cookies.</a></h2>
+                    <h2 className="entry__title"><a onClick={linktoDetail.bind(this,data.id)}>{data.title}</a></h2>
                     <div className="entry__meta">
-                                    <span className="entry__meta-cat">
-                                        <a href="category.html">Lifestyle</a>
-                                        <a href="category.html">Health</a>
+                        <span className="entry__meta-date" >{data.createTime}</span>
+
+                        <span className="entry__meta-cat" >
+                                        <a href="category.html">{data.classify && data.classify.defdocname}</a>
                                     </span>
-                        <span className="entry__meta-date">
-                                        <a href="single-standard.html">Apr 24, 2019</a>
-                                    </span>
+                        <span className="entry__meta-date" >{data.tag && data.tag.map((tag, index) => {
+                            return <Tag color={tag_color[index % 11]}>{tag}</Tag>
+                        })}</span>
+
                     </div>
                 </div>
                 <div className="entry__excerpt">
-                    <p>
-                        Lorem ipsum Sed eiusmod esse aliqua sed incididunt aliqua incididunt mollit id
-                        et sit proident dolor nulla sed commodo est ad minim elit reprehenderit nisi
-                        officia aute incididunt velit sint in aliqua...
-                    </p>
+                    <p>{data.describe}</p>
                 </div>
             </div>
 
-        </article>
+        </article> : <article className="masonry__brick entry format-standard animate-this"><div className="entry__text">
+            <div className="entry__header">
+                <h2 className="entry__title">查询错误</h2>
+            </div>
+        </div></article>
     )
 }
 
-export default SMArticleVideo;
+export default SMArticleAudio;
