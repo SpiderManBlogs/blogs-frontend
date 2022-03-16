@@ -3,13 +3,11 @@ import {useNavigate} from 'react-router-dom';
 import {query_post as query} from "../ajax";
 import {Image, message, Tag} from "antd";
 
-import {tag_color} from '../base/GlobalStatic';
+import {BASEURL,tag_color} from '../base/GlobalStatic';
 
 const SMArticleAudio = (props) => {
 
     const [data,setDate] = useState(null);
-
-    const [backImage,setBackImage] = useState(null);
 
     useEffect(function () {
 
@@ -20,22 +18,12 @@ const SMArticleAudio = (props) => {
         query('/blogs/queryCard',queryData,(data) => {
             if (data.status === 1){
                 setDate(data.data);
-                getBase64(data.data.images);
             }else {
                 message.error('查询失败:' + data.msg);
             }
         });
     },[]);
 
-    const getBase64 = (id) => {
-        query('/file/query',{ids:id},function (data) {
-            if (data.status === 1){
-                setBackImage(data.data);
-            }else {
-                message.error('查询封面失败:' + data.msg);
-            }
-        })
-    }
     const navigate = useNavigate();
     const linktoDetail = (id) => {
         navigate('/detail',{state:{id:id,type:'video'}});
@@ -44,13 +32,11 @@ const SMArticleAudio = (props) => {
     return (
         data ? <article className="masonry__brick entry format-video animate-this">
 
-            {
-                backImage ? <div className="entry__thumb">
-                    <a onClick={linktoDetail.bind(this, data.id)} className="entry__thumb-link">
-                        <Image src={backImage[0]} preview={false}/>
-                    </a>
-                </div>:null
-            }
+            <div className="entry__thumb">
+                <a onClick={linktoDetail.bind(this, data.id)} className="entry__thumb-link">
+                    <Image src={BASEURL + "/file/queryImage/" + data.images[0]} preview={false}/>
+                </a>
+            </div>
 
             <div className="entry__text">
                 <div className="entry__header">

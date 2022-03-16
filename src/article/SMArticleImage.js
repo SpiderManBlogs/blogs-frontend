@@ -3,13 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import {query_post as query} from "../ajax";
 import {message, Tag,Carousel,Image } from "antd";
 
-import {tag_color} from '../base/GlobalStatic';
+import {BASEURL,tag_color} from '../base/GlobalStatic';
 
 const SMArticleImage = (props) => {
 
     const [data,setDate] = useState(null);
-
-    const [backImage,setBackImage] = useState(null);
 
     useEffect(function () {
 
@@ -20,22 +18,12 @@ const SMArticleImage = (props) => {
         query('/blogs/queryCard',queryData,(data) => {
             if (data.status === 1){
                 setDate(data.data);
-                getBase64(data.data.images);
             }else {
                 message.error('查询失败:' + data.msg);
             }
         });
     },[]);
 
-    const getBase64 = (id) => {
-        query('/file/query',{ids:id},function (data) {
-            if (data.status === 1){
-                setBackImage(data.data);
-            }else {
-                message.error('查询封面失败:' + data.msg);
-            }
-        })
-    }
     const navigate = useNavigate();
     const linktoDetail = (id) => {
         navigate('/detail',{state:{id:id,type:props.type}});
@@ -44,20 +32,19 @@ const SMArticleImage = (props) => {
     return (
         data ? <article className="masonry__brick entry format-standard animate-this">
 
-            {backImage ? props.type === 'image' ? <div className="entry__thumb">
+            {props.type === 'image' ? <div className="entry__thumb">
                 <a onClick={linktoDetail.bind(this, data.id)} className="entry__thumb-link">
-                    <Image src={backImage[0]}/>
+                    <Image src={BASEURL + "/file/queryImage/" + data.images[0]}/>
                 </a>
             </div> : <Carousel
                 autoplay={true}
                 dotPosition="bottom"
                 dots={true}
             >
-                {backImage.map((image) => {
-                    return <Image src={image} preview={false}/>
+                {data.images.map((image) => {
+                    return <Image src={BASEURL + "/file/queryImage/" + image} preview={false}/>
                 })}
-            </Carousel> : null
-            }
+            </Carousel>}
 
             <div className="entry__text">
                 <div className="entry__header">

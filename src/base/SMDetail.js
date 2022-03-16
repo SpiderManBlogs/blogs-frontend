@@ -16,12 +16,11 @@ import Hls from 'hls.js'
 const SMDetail = (props) => {
 
     const [data,setDate] = useState(null);
-    const [backImage,setBackImage] = useState(null);
     const [percent,setPercent] = useState(0);
     const [paused,setPaused] = useState(false);
     const location = useLocation();
     const [blogid,setBlogid] = useState(location.state && location.state.id);
-    const type = location.state && location.state.type;
+    const [type,setType] = useState(location.state && location.state.type);
 
     useEffect(function () {
         let queryData = {
@@ -31,7 +30,7 @@ const SMDetail = (props) => {
         query('/blogs/queryCard',queryData,(data) => {
             if (data.status === 1){
                 setDate(data.data);
-                getBase64(data.data.images);
+                setType(data.data.type);
                 SMMainInitPrettyPrint();
                 if (data.data.multimedia){
                     //存在多媒体时
@@ -79,18 +78,9 @@ const SMDetail = (props) => {
         }
     },[blogid]);
 
-    const getBase64 = (id) => {
-        query('/file/query',{ids:id},function (data) {
-            if (data.status === 1){
-                setBackImage(data.data);
-            }else {
-                message.error('查询封面失败:' + data.msg);
-            }
-        })
-    }
-
-    const nextOrPrevOnClick = (id) =>  {
+    const nextOrPrevOnClick = (id,type) =>  {
         setBlogid(id);
+        setType(type);
     };
 
     const audioOnClick = () => {
@@ -105,17 +95,16 @@ const SMDetail = (props) => {
                 <div className="media-wrap entry__media">
                     <div className="entry__post-thumb">
                         {
-                            type !== 'video' ? (backImage ? type === 'image'
-                                    ? <Image src={backImage[0]} preview={false} alt=""/>
+                            type !== 'video' ? (type === 'image'
+                                    ? <Image src={BASEURL + "/file/queryImage/" + data.images[0]} preview={false} alt=""/>
                                     : <Carousel
                                         autoplay={true}
                                         dotPosition="bottom"
                                     >
-                                        {backImage.map((image) => {
-                                            return <Image src={image} preview={false} width="auto" height="auto"/>
+                                        {data.images.map((image) => {
+                                            return <Image src={BASEURL + "/file/queryImage/" + image} preview={false} width="auto" height="auto"/>
                                         })}
-                                    </Carousel> : null
-                            ) : <div id="dplayer"/>
+                                    </Carousel>) : <div id="dplayer"/>
                         }
 
                     </div>
@@ -149,13 +138,13 @@ const SMDetail = (props) => {
                 <div className="entry__pagenav">
                     <div className="entry__nav">
                         <div className="entry__prev">
-                            {data.prev ? <a onClick={nextOrPrevOnClick.bind(this,data.prev.id)} rel="prev">
+                            {data.prev ? <a onClick={nextOrPrevOnClick.bind(this,data.prev.id,data.prev.type)} rel="prev">
                                 <span>上一篇</span>
                                 {data.prev.title}
                             </a> : <a>前面没有了</a>}
                         </div>
                         <div className="entry__next">
-                            {data.next ? <a onClick={nextOrPrevOnClick.bind(this,data.next.id)} rel="next">
+                            {data.next ? <a onClick={nextOrPrevOnClick.bind(this,data.next.id,data.next.type)} rel="next">
                                 <span>下一篇</span>
                                 {data.next.title}
                             </a> : <a>最后一篇了</a>}

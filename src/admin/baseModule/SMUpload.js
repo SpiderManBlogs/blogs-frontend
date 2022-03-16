@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
-import {query_post as query} from '../../ajax/index'
-import {message, Modal, Upload} from "antd";
+import {Modal, Upload} from "antd";
 import {PlusOutlined} from "@ant-design/icons";
 import {BASEURL} from '../../base/GlobalStatic';
 
@@ -11,26 +10,13 @@ const SMUpload = (props) => {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
 
-    const getBase64 = (id) => {
-        return new Promise((resolve, reject) => {
-            query('/file/query',{ids:[id]},function (data) {
-                if (data.status === 1){
-                    resolve(data.data[0]);
-                }else {
-                    reject(data.msg);
-                    message.error('查询失败:' + data.msg);
-                }
-            })
-        });
-    }
-
     const handleCancel = () => {
         setPreviewVisible(false);
     }
 
     const handlePreview = async file => {
         if (!file.preview) {
-            file.preview = await getBase64(file.id);
+            file.preview = BASEURL + "/file/queryImage/" + file.id;
         }
         setPreviewImage(file.preview);
         setPreviewTitle(file.name);
