@@ -1,5 +1,6 @@
 import React, {useState,useEffect} from 'react'
 import {query_post as query} from "../ajax";
+import {SMContentInit} from "../base/main";
 
 
 const SMArticleLink = (props) => {
@@ -14,11 +15,12 @@ const SMArticleLink = (props) => {
         }
         query('/blogs/queryCard',queryData,(data) => {
             setDate(data.data);
+            SMContentInit();
         });
     },[props.article]);
 
     return (
-        <article className="masonry__brick entry format-link animate-this">
+        <article className="masonry__brick entry format-link">
 
             <div className="entry__thumb">
                 <div className="link-wrap">

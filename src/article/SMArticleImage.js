@@ -4,6 +4,7 @@ import {query_post as query} from "../ajax";
 import {message, Tag,Carousel,Image } from "antd";
 
 import {BASEURL,tag_color} from '../base/GlobalStatic';
+import {SMContentInit} from "../base/main";
 
 const SMArticleImage = (props) => {
 
@@ -18,6 +19,7 @@ const SMArticleImage = (props) => {
         query('/blogs/queryCard',queryData,(data) => {
             if (data.status === 1){
                 setDate(data.data);
+                SMContentInit();
             }else {
                 message.error('查询失败:' + data.msg);
             }
@@ -30,7 +32,7 @@ const SMArticleImage = (props) => {
     }
 
     return (
-        data ? <article className="masonry__brick entry format-standard animate-this">
+        data ? <article className="masonry__brick entry format-standard">
 
             {props.type === 'image' ? <div className="entry__thumb">
                 <a onClick={linktoDetail.bind(this, data.id)} className="entry__thumb-link">
@@ -66,7 +68,7 @@ const SMArticleImage = (props) => {
                 </div>
             </div>
 
-        </article> : <article className="masonry__brick entry format-standard animate-this"><div className="entry__text">
+        </article> : <article className="masonry__brick entry format-standard"><div className="entry__text">
             <div className="entry__header">
                 <h2 className="entry__title">查询错误</h2>
             </div>

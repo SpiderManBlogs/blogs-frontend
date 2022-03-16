@@ -1,10 +1,20 @@
 import $ from 'jquery'
+import Masonry from 'masonry-layout'
+import imagesLoaded from 'imagesloaded'
+
+
+const $WIN = $(window);
+
+const cfg = {
+    scrollDuration: 800, // smoothscroll duration
+    mailChimpURL: ''   // mailchimp url
+};
 
 /* menu
  * ------------------------------------------------------ */
 function ssMenu() {
 
-    var menuToggle = $('.header__menu-toggle'),
+    const menuToggle = $('.header__menu-toggle'),
         siteBody = $('body');
 
     menuToggle.on('click', function (e) {
@@ -39,6 +49,27 @@ function ssPrettyPrint() {
     $( document ).ready(function() {
         prettyPrint();
     });
+}
+
+
+/* masonry
+    * ---------------------------------------------------- */
+function ssMasonryFolio() {
+    const containerBricks = document.querySelector('.masonry');
+    new Masonry(containerBricks,{
+        itemSelector: '.masonry__brick',
+        columnWidth: '.grid-sizer',
+        percentPosition: true,
+        resize: true
+    })
+
+    imagesLoaded(containerBricks,function( instance ) {
+        new Masonry(containerBricks,'layout');
+    });
+}
+
+export function SMContentInit() {
+    ssMasonryFolio();
 }
 
 export function SMMainInitMenu() {

@@ -1508,11 +1508,8 @@ input::-moz-focus-inner {
  * ## animation stuff
  * ------------------------------------------------------------------- */
 .animate-this {
-  /* TODO
-        暂时注掉
-      */
-  /*opacity: 0;*/
-  /*visibility: hidden;*/
+  opacity: 0;
+  visibility: hidden;
 }
 
 .no-js .animate-this,

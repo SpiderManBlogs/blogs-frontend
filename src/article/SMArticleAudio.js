@@ -4,6 +4,7 @@ import {query_post as query} from "../ajax";
 import {Image, message, Tag} from "antd";
 
 import {BASEURL,tag_color} from '../base/GlobalStatic';
+import {SMContentInit} from "../base/main";
 
 const SMArticleAudio = (props) => {
 
@@ -18,6 +19,7 @@ const SMArticleAudio = (props) => {
         query('/blogs/queryCard',queryData,(data) => {
             if (data.status === 1){
                 setDate(data.data);
+                SMContentInit();
             }else {
                 message.error('查询失败:' + data.msg);
             }
@@ -30,7 +32,7 @@ const SMArticleAudio = (props) => {
     }
 
     return (
-        data ? <article className="masonry__brick entry format-audio animate-this">
+        data ? <article className="masonry__brick entry format-audio">
 
             <div className="entry__thumb">
                 <a onClick={linktoDetail.bind(this, data.id)} className="entry__thumb-link">
@@ -58,7 +60,7 @@ const SMArticleAudio = (props) => {
                 </div>
             </div>
 
-        </article> : <article className="masonry__brick entry format-standard animate-this"><div className="entry__text">
+        </article> : <article className="masonry__brick entry format-standard"><div className="entry__text">
             <div className="entry__header">
                 <h2 className="entry__title">查询错误</h2>
             </div>
