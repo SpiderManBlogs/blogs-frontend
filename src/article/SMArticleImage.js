@@ -28,7 +28,7 @@ const SMArticleImage = (props) => {
 
     const navigate = useNavigate();
     const linktoDetail = (id) => {
-        navigate('/detail',{state:{id:id,type:props.type}});
+        navigate('/blogs/detail',{state:{id:id,type:props.type}});
     }
 
     return (

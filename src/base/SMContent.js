@@ -19,7 +19,7 @@ const SMContent = (props) => {
     }, [props.listdata]);
 
     const rowClick = (page) => {
-        navigate('/home', {state: {...page}});
+        navigate('/blogs/home', {state: {...page}});
     }
 
     const rows = () => {
