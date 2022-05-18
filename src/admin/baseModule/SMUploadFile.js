@@ -28,7 +28,7 @@ const SMUploadFile = (props) => {
                 || file.name.endsWith('avi') || file.name.endsWith('mkv') || file.name.endsWith('wmv'));
         }
         if (!isPNG) {
-            message.error(`${file.name} is not a png file`);
+            message.error(`${file.name} is not a Video file`);
         }
         return isPNG || Upload.LIST_IGNORE;
     }
