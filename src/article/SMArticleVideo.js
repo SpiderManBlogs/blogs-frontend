@@ -28,7 +28,7 @@ const SMArticleAudio = (props) => {
 
     const navigate = useNavigate();
     const linktoDetail = (id) => {
-        navigate('/blogs/detail',{state:{id:id,type:'video'}});
+        navigate('/detail',{state:{id:id,type:'video'}});
     }
 
     return (

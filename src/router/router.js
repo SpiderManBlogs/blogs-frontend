@@ -22,14 +22,14 @@ const Routelist = (props) => {
             <div id="top" className="s-wrap site-wrapper">
                 <SMHeader/>
                 <Routes>
-                    <Route path="/blogs/" element={<SMContent/>}/>
-                    <Route path="/blogs/home" element={<SMContent/>}/>
-                    <Route path="/blogs/detail" element={<SMDetail/>}/>
-                    <Route path="/blogs/add" element={<SMAdd/>}/>
-                    <Route path="/blogs/addLink" element={<SMAddLink/>}/>
-                    <Route path="/blogs/addSaying" element={<SMAddSaying/>}/>
+                    <Route path="/" element={<SMContent/>}/>
+                    <Route path="/home" element={<SMContent/>}/>
+                    <Route path="/detail" element={<SMDetail/>}/>
+                    <Route path="/add" element={<SMAdd/>}/>
+                    <Route path="/addLink" element={<SMAddLink/>}/>
+                    <Route path="/addSaying" element={<SMAddSaying/>}/>
 
-                    <Route path="/blogs/defdoclist" element={<SMDefdoclist/>}/>
+                    <Route path="/defdoclist" element={<SMDefdoclist/>}/>
                 </Routes>
                 <SMFooter/>
             </div>
